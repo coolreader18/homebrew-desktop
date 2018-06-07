@@ -69,7 +69,12 @@ const styles = (theme: Theme) =>
     wrapper: {
       margin: theme.spacing.unit,
       position: "relative"
-    }
+    },
+    unclickable: {
+      userDrag: "none",
+      userSelect: "none"
+    },
+    pointer: { cursor: "default" }
   });
 
 export type AppStyles = WithStyles<typeof styles>;

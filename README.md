@@ -12,3 +12,7 @@ An app that allows you to manage your Homebrewed Wii U's SD card from a computer
 3.  Install dependencies. If you did install yarn, run `yarn`, or `npm install` if you didn't, from
     the command line in the homebrew-desktop directory. Wait a while.
 4.  Run `yarn start` or `npm start`. The app should start up.
+
+## License
+
+This project is licensed under the MIT license. See the [LICENSE](LICENSE) file for more details.

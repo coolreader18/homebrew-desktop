@@ -7,13 +7,13 @@ import React, { Component } from "react";
 import { Stream } from "stream";
 import AppsGrid from "./AppsGrid";
 import DirectoryPrompt from "./DirectoryPrompt";
-import { HBASApp, HBASDirectory } from "common/HBAS";
 import InfoModal from "./InfoModal";
 import styles, { AppStyles, StylesProvider } from "./styles";
 import TopBar from "./TopBar";
 import { Provider, Subscribe } from "unstated";
 import { configContainer, ConfigContainer } from "./state";
 import { ipcRenderer } from "electron";
+import cn from "classnames";
 axios.defaults.adapter = require("axios/lib/adapters/http");
 
 let repository = "https://wiiubru.com/appstore";
@@ -53,51 +53,55 @@ export class App extends Component<AppProps, AppState> {
       })
     );
   };
+  handleRemove = async ({ directory }: HBASApp) => {
+    await fs.rmdirAsync(`${configContainer.state.directory}/apps/${directory}`);
+  };
   render() {
     const {
       state: { data, modal },
       props: { classes, width }
     } = this;
+    document.body.className = cn(classes.unclickable, classes.pointer);
     return (
-      <CssBaseline>
-        <>
-          <Subscribe to={[configContainer]}>
-            {({ state }: ConfigContainer) =>
-              state && state.directory ? (
-                <div style={{ paddingTop: 75 }}>
-                  <TopBar classes={classes} />
-                  {data && (
-                    <AppsGrid
-                      directory={data}
-                      onTileClick={this.tileClick}
-                      {...{ repository, classes, width }}
-                    />
-                  )}
-                  <InfoModal
-                    info={modal}
-                    classes={classes}
-                    download={this.handleDownload}
-                    open={!!modal}
-                    onClose={this.modalClose}
-                    repository={repository}
+      <>
+        <Subscribe to={[configContainer]}>
+          {({ state }: ConfigContainer) =>
+            state && state.directory ? (
+              <div style={{ paddingTop: 75 }}>
+                <TopBar classes={classes} />
+                {data && (
+                  <AppsGrid
+                    directory={data}
+                    onTileClick={this.tileClick}
+                    {...{ repository, classes, width }}
                   />
-                </div>
-              ) : (
-                <DirectoryPrompt classes={classes} />
-              )
-            }
-          </Subscribe>
-        </>
-      </CssBaseline>
+                )}
+                <InfoModal
+                  info={modal}
+                  classes={classes}
+                  download={this.handleDownload}
+                  remove={this.handleRemove}
+                  open={!!modal}
+                  onClose={this.modalClose}
+                  repository={repository}
+                />
+              </div>
+            ) : (
+              <DirectoryPrompt classes={classes} />
+            )
+          }
+        </Subscribe>
+      </>
     );
   }
   componentDidMount() {
     this.getRepository();
   }
   async getRepository() {
-    const { data }: { data: HBASDirectory } = await axios.get(
-      repository + "/directory.json"
-    );
+    const { data }: { data: HBASDirectory } = {
+      data: (await import("./repo.json")).default
+    };
+    // await axios.get(repository + "/directory.json");
     for (const cur of data.apps) {
       cur.long_desc = cur.long_desc.replace(/\\(?:n|t|v)/g, a =>
         JSON.parse(`"${a}"`)

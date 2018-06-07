@@ -10,7 +10,6 @@ import {
 import { ModalProps } from "@material-ui/core/Modal";
 import * as icons from "@material-ui/icons";
 import cn from "classnames";
-import { HBASApp } from "common/HBAS";
 import React, { PureComponent } from "react";
 import CenteredModal from "./CenteredModal";
 import { appsInfoContainer, AppsInfoContainer, AppInfo } from "./state";
@@ -27,6 +26,7 @@ export default class InfoModal extends PureComponent<
     AppStyles & {
       info: HBASApp | null;
       download: (app: HBASApp) => Promise<void>;
+      remove: (app: HBASApp) => Promise<void>;
       repository: string;
     }
 > {
@@ -36,8 +36,20 @@ export default class InfoModal extends PureComponent<
     await this.props.download(this.props.info!);
     appsInfoContainer.assign(app, { installed: true, loading: false });
   };
+  remove = async () => {
+    const app = this.props.info!.directory;
+    await this.props.remove(this.props.info!);
+    appsInfoContainer.assign(app, { installed: false });
+  };
   render() {
-    const { info, classes, download, repository, ...props } = this.props;
+    const {
+      info,
+      classes,
+      download,
+      remove,
+      repository,
+      ...props
+    } = this.props;
     return (
       <CenteredModal {...props}>
         {info && (
@@ -48,23 +60,25 @@ export default class InfoModal extends PureComponent<
               className={classes.modalCardImage}
             />
             <CardContent>
-              <Typography variant="title">{info.name}</Typography>
+              <Typography variant="title" className={classes.pointer}>
+                {info.name}
+              </Typography>
               <Typography variant="subheading">by {info.author}</Typography>
               <Typography
                 variant="body1"
                 component="p"
-                className={classes.paragraph}
+                className={cn(classes.paragraph, classes.pointer)}
               >
                 {info.long_desc}
               </Typography>
             </CardContent>
-            <CardActions dir="rtl">
-              <Subscribe to={[appsInfoContainer]}>
-                {({
-                  state: {
-                    [info.directory]: { loading, installed } = defaultAppInfo
-                  }
-                }: AppsInfoContainer) => (
+            <Subscribe to={[appsInfoContainer]}>
+              {({
+                state: {
+                  [info.directory]: { loading, installed } = defaultAppInfo
+                }
+              }: AppsInfoContainer) => (
+                <CardActions dir="rtl">
                   <div className={classes.wrapper}>
                     <Button
                       variant="outlined"
@@ -86,9 +100,21 @@ export default class InfoModal extends PureComponent<
                       />
                     )}
                   </div>
-                )}
-              </Subscribe>
-            </CardActions>
+                  {installed && (
+                    <div className={classes.wrapper}>
+                      <Button
+                        variant="outlined"
+                        onClick={this.remove}
+                        className={classes.button}
+                      >
+                        <icons.Remove className={classes.leftIcon} />
+                        remove
+                      </Button>
+                    </div>
+                  )}
+                </CardActions>
+              )}
+            </Subscribe>
           </Card>
         )}
       </CenteredModal>

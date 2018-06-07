@@ -8,7 +8,6 @@ import { Breakpoint } from "@material-ui/core/styles/createBreakpoints";
 import { WithWidthProps } from "@material-ui/core/withWidth";
 import * as icons from "@material-ui/icons";
 import React, { PureComponent } from "react";
-import { HBASApp, HBASDirectory } from "common/HBAS";
 import { AppClasses } from "./styles";
 
 export let colWidths: { [width in Breakpoint]: number } = {

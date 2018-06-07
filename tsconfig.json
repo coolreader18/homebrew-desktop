@@ -6,7 +6,8 @@
     "target": "es2017",
     "baseUrl": ".",
     "paths": {
-      "common/*": ["src/common/*"]
+      "common/*": ["src/common/*"],
+      "static/*": ["static/*"]
     }
   }
 }

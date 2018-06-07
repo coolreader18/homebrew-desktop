@@ -1,5 +1,6 @@
 import { app, BrowserWindow } from "electron";
 import * as path from "path";
+// import icon from "static/icons/png/64x64.png";
 
 app.setName("homebrew-desktop");
 
@@ -13,7 +14,7 @@ function createWindow() {
     minWidth: 800,
     minHeight: 600,
     backgroundColor: "#fafafa",
-    icon: path.join(__dirname, "../common/icons/png/64x64.png")
+    icon: path.join(__dirname, "../../static/icons/png/64x64.png")
   });
   //mainWindow.setMenu(null)
   // and load the index.html of the app.
