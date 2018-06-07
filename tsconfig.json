@@ -1,0 +1,12 @@
+{
+  "extends": "./node_modules/electron-webpack/tsconfig-base.json",
+  "compilerOptions": {
+    "jsx": "react",
+    "lib": ["es2017", "dom"],
+    "target": "es2017",
+    "baseUrl": ".",
+    "paths": {
+      "common/*": ["src/common/*"]
+    }
+  }
+}

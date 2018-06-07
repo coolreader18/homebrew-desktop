@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Hello World!</title>
+  <link rel="stylesheet" href="node_modules\angular-material\angular-material.css">
+  <link rel="stylesheet" href="assets\css\style.css">
+</head>
+
+<body ng-app='homebrew-desktop' ng-controller='main' layout layout-align="center center">
+  <md-progress-circular md-mode="indeterminate" ng-hide="init!==null" ng-disabled="init!==null" md-diameter=100px></md-progress-circular>
+  <div id="main" ng-hide='init===true'>
+    <md-toolbar>
+      <div class=md-toolbar-tools>
+        <h2>Homebrew Desktop</h2>
+      </div>
+    </md-toolbar>
+    <md-grid-list md-cols-sm=3 md-cols-md=4 md-cols-lg=5 md-cols=3 md-row-height=1:1 onreadystatechange="console.log(event)">
+      <md-grid-tile ng-repeat="app in directory.apps">
+        <md-card id="app{{$index}}" class="app">
+          <img ng-src="{{repo}}/apps/{{app.directory}}/icon.png" md-card-image/>
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline" md-truncate md-ellipsis>{{app.name}}</span>
+              <span class="md-subhead">{{app.desc}}</span>
+            </md-card-title-text>
+          </md-card-title>
+          <md-card-actions layout layout-align="end center">
+            <md-button ng-click=getHomebrew($index) class="install">install</md-button>
+            <md-button ng-click=openInfo($index) class="info">info</md-button>
+          </md-card-actions>
+        </md-card>
+      </md-grid-tile>
+    </md-grid-list>
+  </div>
+  <div id="init" flex layout=column layout-align='center center' ng-hide='init===false'>
+    <p>
+      You don't have a default folder set. Please choose one.
+    </p>
+    <md-button ng-click=folderSelect()>Choose Folder</md-button>
+  </div>
+  <script>
+    require("angular")
+    require("angular-aria")
+    require("angular-messages")
+    require("angular-animate")
+    require("angular-material")
+    require("angular-sanitize")
+    const fs = require('fs-extra-promise');
+    const jsonfile = require('jsonfile');
+    const { shell } = require("electron").remote.require("electron")
+    require('./assets/js/renderer.js')
+  </script>
+</body>
+
+</html>

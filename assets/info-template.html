@@ -1,0 +1,19 @@
+<md-dialog flex=70>
+  <md-card>
+    <md-card-title>
+      <md-card-title-text>
+        <span class="md-headline">{{info.meta.name}}</span>
+        <span class="md-subhead">{{info.meta.short_description}}</span>
+      </md-card-title-text>
+    </md-card-title>
+    <md-card-content>
+      <span>Coder: {{info.meta.coder}}</span>
+      <br>
+      <a ng-href=javascript:void(0) ng-click=info.openUrl()>Link</a>
+      <p ng-bind-html="info.meta.long_description_br"></p>
+    </md-card-content>
+    <md-card-actions layout layout-align="end center">
+      <md-button ng-click=info.install()>install</md-button>
+    </md-card-actions>
+  </md-card>
+</md-dialog>

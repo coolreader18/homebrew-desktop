@@ -1,0 +1,16 @@
+#main, #init {
+  height: 100%;
+  width: 100%;
+}
+.app {
+  width: 95%;
+  height: 95%;
+}
+.app md-card-title-text {
+  width: 100%;
+  height: 68px;
+}
+.app md-card-title-text .md-headline {
+  height: 32px;
+  width: 100%;
+}
