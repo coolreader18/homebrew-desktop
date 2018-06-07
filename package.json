@@ -46,5 +46,6 @@
     "react-dom": "^16.4.0",
     "react-hot-loader": "^4.3.0",
     "unstated": "^2.1.1"
-  }
+  },
+  "license": "MIT"
 }
