@@ -3,23 +3,19 @@ import * as path from "path";
 import Stream from "stream";
 import * as fs from "fs-extra-promise";
 
-export const getRepositories = async (...repositories: string[]) => {
-  const repos = (await Promise.all(
+export const getRepositories = async (...repositories: string[]) =>
+  (await Promise.all(
     repositories.map(cur => axios.get<HBASDirectory>(`${cur}/directory.json`))
   )).reduce((arr, cur, i) => {
     const { apps } = cur.data;
-    apps.forEach(app => {
+    for (const app of apps) {
       app.repository = repositories[i];
-    });
+      app.long_desc = app.long_desc.replace(/\\(?:n|t|v)/g, a =>
+        JSON.parse(`"${a}"`)
+      );
+    }
     return arr.concat(apps);
   }, Array<HBASApp>());
-  for (const cur of repos) {
-    cur.long_desc = cur.long_desc.replace(/\\(?:n|t|v)/g, a =>
-      JSON.parse(`"${a}"`)
-    );
-  }
-  return repos;
-};
 
 export const downloadApp = async (
   baseDirectory: string,
