@@ -6,7 +6,6 @@ const app = electron.app || remote.app;
 
 export interface AppConfig {
   repositories: string[];
-  currentRepository: number;
   directory: string;
 }
 const config = new Store<AppConfig>({

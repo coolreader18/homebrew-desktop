@@ -14,6 +14,9 @@ declare interface HBASApp {
   directory: string;
   type: string;
   channel: string;
+
+  // specific to this, set by the API
+  repository: string;
 }
 
 declare interface HBASDirectory {

@@ -12,9 +12,15 @@ import * as icons from "@material-ui/icons";
 import cn from "classnames";
 import React, { PureComponent } from "react";
 import CenteredModal from "./CenteredModal";
-import { appsInfoContainer, AppsInfoContainer, AppInfo } from "./state";
+import {
+  appsInfoContainer,
+  AppsInfoContainer,
+  AppInfo,
+  configContainer
+} from "./state";
 import { AppStyles } from "./styles";
 import { Subscribe } from "unstated";
+import { downloadApp, removeApp } from "common/api";
 
 const defaultAppInfo: AppInfo = {
   loading: false,
@@ -24,98 +30,89 @@ const defaultAppInfo: AppInfo = {
 export default class InfoModal extends PureComponent<
   ModalProps &
     AppStyles & {
-      info: HBASApp | null;
-      download: (app: HBASApp) => Promise<void>;
-      remove: (app: HBASApp) => Promise<void>;
-      repository: string;
+      info: HBASApp;
     }
 > {
   download = async () => {
-    const app = this.props.info!.directory;
-    appsInfoContainer.assign(app, { loading: true });
-    await this.props.download(this.props.info!);
-    appsInfoContainer.assign(app, { installed: true, loading: false });
+    const { directory } = this.props.info;
+    appsInfoContainer.assign(directory, { loading: true });
+    await downloadApp(configContainer.state.directory, this.props.info);
+    appsInfoContainer.assign(directory, { installed: true, loading: false });
   };
   remove = async () => {
     const app = this.props.info!.directory;
-    await this.props.remove(this.props.info!);
+    await removeApp(configContainer.state.directory, this.props.info!);
     appsInfoContainer.assign(app, { installed: false });
   };
   render() {
     const {
-      info,
+      info: { directory, repository, name, author, long_desc },
       classes,
-      download,
-      remove,
-      repository,
       ...props
     } = this.props;
     return (
       <CenteredModal {...props}>
-        {info && (
-          <Card className={classes.modalCard}>
-            <CardMedia
-              image={`${repository}/apps/${info.directory}/icon.png`}
-              title={`Image for ${info.name}`}
-              className={classes.modalCardImage}
-            />
-            <CardContent>
-              <Typography variant="title" className={classes.pointer}>
-                {info.name}
-              </Typography>
-              <Typography variant="subheading">by {info.author}</Typography>
-              <Typography
-                variant="body1"
-                component="p"
-                className={cn(classes.paragraph, classes.pointer)}
-              >
-                {info.long_desc}
-              </Typography>
-            </CardContent>
-            <Subscribe to={[appsInfoContainer]}>
-              {({
-                state: {
-                  [info.directory]: { loading, installed } = defaultAppInfo
-                }
-              }: AppsInfoContainer) => (
-                <CardActions dir="rtl">
+        <Card className={classes.modalCard}>
+          <CardMedia
+            image={`${repository}/apps/${directory}/icon.png`}
+            title={`Image for ${name}`}
+            className={classes.modalCardImage}
+          />
+          <CardContent>
+            <Typography variant="title" className={classes.pointer}>
+              {name}
+            </Typography>
+            <Typography variant="subheading">by {author}</Typography>
+            <Typography
+              variant="body1"
+              component="p"
+              className={cn(classes.paragraph, classes.pointer)}
+            >
+              {long_desc}
+            </Typography>
+          </CardContent>
+          <Subscribe to={[appsInfoContainer]}>
+            {({
+              state: { [directory]: { loading, installed } = defaultAppInfo }
+            }: AppsInfoContainer) => (
+              <CardActions dir="rtl">
+                <div className={classes.wrapper}>
+                  <Button
+                    variant="outlined"
+                    className={cn(classes.button, {
+                      [classes.buttonSuccess]: installed
+                    })}
+                    onClick={this.download}
+                    disabled={loading}
+                  >
+                    {installed && "re"}download
+                    <icons.FileDownload className={classes.leftIcon} />
+                  </Button>
+                  {loading && (
+                    <CircularProgress
+                      size={24}
+                      className={cn(classes.buttonProgress, {
+                        [classes.buttonProgressInstalled]: installed
+                      })}
+                    />
+                  )}
+                </div>
+                {installed && (
                   <div className={classes.wrapper}>
                     <Button
                       variant="outlined"
-                      className={cn(classes.button, {
-                        [classes.buttonSuccess]: installed
-                      })}
-                      onClick={this.download}
-                      disabled={loading}
+                      onClick={this.remove}
+                      className={classes.button}
                     >
-                      <icons.FileDownload className={classes.leftIcon} />
-                      {installed && "re"}download
+                      remove
+                      <icons.Delete className={classes.leftIcon} />
                     </Button>
-                    {loading && (
-                      <CircularProgress
-                        size={24}
-                        className={cn(classes.buttonProgress, {
-                          [classes.buttonProgressInstalled]: installed
-                        })}
-                      />
-                    )}
                   </div>
-                  {installed && (
-                    <div className={classes.wrapper}>
-                      <Button
-                        variant="outlined"
-                        onClick={this.remove}
-                        className={classes.button}
-                      >
-                        <icons.Remove className={classes.leftIcon} />
-                        remove
-                      </Button>
-                    </div>
-                  )}
-                </CardActions>
-              )}
-            </Subscribe>
-          </Card>
+                )}
+              </CardActions>
+            )}
+          </Subscribe>
+        </Card>
         )}
       </CenteredModal>
     );

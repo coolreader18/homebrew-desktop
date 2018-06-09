@@ -30,15 +30,6 @@ export class ConfigContainer extends EventContainer<AppConfig> {
       appsInfoContainer.loadFromDirectory();
     }
   }
-  get repository() {
-    const { repositories, currentRepository } = this.state;
-    return repositories[currentRepository];
-  }
-  setRepository = async (
-    currentRepository: number & keyof this["state"]["repositories"]
-  ) => {
-    await this.setState({ currentRepository });
-  };
 }
 
 export const configContainer = new ConfigContainer();
@@ -66,7 +57,7 @@ export class AppsInfoContainer extends Container<AppsInfo> {
   }
   async loadFromDirectory() {
     const dirs = await fs.readdirAsync(
-      path.join(configContainer.state.directory, "apps")
+      path.join(configContainer.state.directory, "wiiu/apps")
     );
     appsInfoContainer.reset(
       dirs.reduce((obj: AppsInfo, cur) => {

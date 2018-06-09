@@ -1,5 +1,6 @@
 import { createStyles, Theme, WithStyles, colors } from "@material-ui/core";
 import React from "react";
+import { Breakpoint } from "@material-ui/core/styles/createBreakpoints";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -67,7 +68,7 @@ const styles = (theme: Theme) =>
       }
     },
     wrapper: {
-      margin: theme.spacing.unit,
+      margin: 0,
       position: "relative"
     },
     unclickable: {
@@ -84,4 +85,9 @@ export const {
   Consumer: StylesConsumer,
   Provider: StylesProvider
 } = stylesContext;
+const widthContext = React.createContext<Breakpoint>("md");
+export const {
+  Consumer: WidthConsumer,
+  Provider: WidthProvider
+} = widthContext;
 export default styles;

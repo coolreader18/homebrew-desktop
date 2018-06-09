@@ -20,23 +20,22 @@ export let colWidths: { [width in Breakpoint]: number } = {
 
 export default class AppsGrid extends PureComponent<
   {
-    directory: HBASDirectory;
+    directory: HBASApp[];
     classes: AppClasses;
-    repository: string;
     onTileClick: (app: HBASApp) => void;
   } & WithWidthProps
 > {
   handleClick = (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation();
     this.props.onTileClick(
-      this.props.directory.apps[~~(e.currentTarget.dataset.index as string)]
+      this.props.directory[~~(e.currentTarget.dataset.index as string)]
     );
   };
   render() {
-    const { classes, repository, width } = this.props;
+    const { classes, width, directory } = this.props;
     return (
       <GridList cols={colWidths[width]} className={classes.gridList}>
-        {this.props.directory.apps.map(({ directory, name, author }, i) => (
+        {directory.map(({ directory, name, author, repository }, i) => (
           <GridListTile key={directory} cols={1} rows={1}>
             <img
               src={`${repository}/apps/${directory}/icon.png`}
