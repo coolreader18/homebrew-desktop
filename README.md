@@ -2,6 +2,16 @@
 
 An app that allows you to manage your Homebrewed Wii U's SD card from a computer.
 
+## Screenshots
+
+![The main screen of the app](screenshots/mainscreen.png)
+
+![A modal that pops up showing more information about a specific app](screenshots/modal.png)
+
+![Downloading the app from said modal](screenshots/downloading.png)
+
+![The app is downloaded, showing a remove button and a redownload button](screenshots/downloaded.png)
+
 ## Building
 
 1.  Ensure that you have [node.js](https://nodejs.org/en/download/), and preferably

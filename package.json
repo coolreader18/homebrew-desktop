@@ -5,8 +5,9 @@
   "main": "main.js",
   "scripts": {
     "start": "electron-webpack dev",
-    "pack": "npx electron-builder --dir",
-    "dist": "npx electron-builder"
+    "compile": "electron-webpack",
+    "dist": "yarn compile && electron-builder",
+    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
   },
   "build": {
     "directories": {
@@ -45,6 +46,7 @@
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-hot-loader": "^4.3.0",
+    "source-map-support": "^0.5.6",
     "unstated": "^2.1.1"
   },
   "license": "MIT"
