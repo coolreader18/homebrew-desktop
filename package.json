@@ -6,13 +6,8 @@
   "scripts": {
     "start": "electron-webpack dev",
     "compile": "electron-webpack",
-    "dist": "yarn compile && electron-builder",
+    "dist": "ELECTRON_HMR_SOCKET_PATH=1 yarn compile && electron-builder",
     "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
-  },
-  "build": {
-    "directories": {
-      "buildResources": "build"
-    }
   },
   "nsis": {},
   "repository": "https://github.com/coolreader18/homebrew-desktop",
@@ -20,7 +15,10 @@
     "wiiu-hacking",
     "homebrew-appstore"
   ],
-  "author": "coolreader18",
+  "author": {
+    "name": "coolreader18",
+    "email": "33094578+coolreader18@users.noreply.github.com"
+  },
   "devDependencies": {
     "@types/classnames": "^2.2.4",
     "@types/electron-store": "^1.3.0",

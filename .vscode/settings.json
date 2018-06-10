@@ -1,3 +1,13 @@
 {
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "json.schemas": [
+    {
+      "fileMatch": ["electron-webpack.json"],
+      "url": "/node_modules/electron-webpack/scheme.json"
+    },
+    {
+      "fileMatch": ["electron-builder.json"],
+      "url": "/node_modules/electron-builder-lib/scheme.json"
+    }
+  ]
 }

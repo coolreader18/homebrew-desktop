@@ -3,6 +3,7 @@ import * as path from "path";
 // import icon from "static/icons/png/64x64.png";
 
 app.setName("homebrew-desktop");
+const isDevelopment = process.env.NODE_ENV !== "production";
 
 let mainWindow: BrowserWindow | null;
 
@@ -15,18 +16,21 @@ function createWindow() {
     minHeight: 600,
     backgroundColor: "#fafafa",
     show: false,
-    icon: path.join(__dirname, "../../static/icons/png/64x64.png"),
+    icon: path.join(__static, "icons/png/64x64.png"),
     title: "Homebrew Desktop"
   });
   //mainWindow.setMenu(null)
   // and load the index.html of the app.
   mainWindow.loadURL(
-    `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`
+    isDevelopment
+      ? `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`
+      : `file://${path.join(__dirname, "index.html")}`
   );
 
-  BrowserWindow.addDevToolsExtension(
-    "/home/coolreader18/.config/google-chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/3.2.3_0/"
-  );
+  if (isDevelopment)
+    BrowserWindow.addDevToolsExtension(
+      path.join(__static, "react-devtools.crx")
+    );
   // Emitted when the window is closed.
   ipcMain.on("ready-to-show", () => {
     mainWindow!.show();

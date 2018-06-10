@@ -1,0 +1,13 @@
+{
+  "directories": {
+    "buildResources": "build",
+    "app": "."
+  },
+  "linux": {
+    "category": "Utility",
+    "target": ["deb"],
+    "desktop": { "name": "Homebrew Desktop" }
+  },
+  "extraResources": [{ "from": "dist/renderer", "to": "renderer" }],
+  "extends": "electron-webpack/electron-builder.yml"
+}
