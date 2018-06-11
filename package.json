@@ -8,10 +8,8 @@
     "compile": "electron-webpack",
     "compile:dll": "electron-webpack dll",
     "dist": "ELECTRON_HMR_SOCKET_PATH=1 yarn compile && electron-builder",
-    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
-    "postinstall": "yarn compile:dll"
+    "dist:dir": "yarn dist -- --dir -c.compression=store -c.mac.identity=null"
   },
-  "nsis": {},
   "repository": "https://github.com/coolreader18/homebrew-desktop",
   "keywords": [
     "wiiu-hacking",
@@ -30,8 +28,11 @@
     "@types/react-hot-loader": "^4.1.0",
     "electron": "^2.0.2",
     "electron-builder": "^19.53.6",
+    "electron-builder-lib": "^20.15.3",
+    "electron-builder-squirrel-windows": "^20.15.0",
     "electron-webpack": "^2.1.2",
     "electron-webpack-ts": "^2.0.2",
+    "prop-types": "^15.6.1",
     "tslint": "^5.9.1",
     "typescript": "^2.9.1",
     "webpack": "^4.10.2"

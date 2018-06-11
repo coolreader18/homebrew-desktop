@@ -71,7 +71,7 @@ export class App extends Component<AppProps, AppState> {
       </Subscribe>
     );
   }
-  async componentDidMount() {
+  componentDidMount() {
     ipcRenderer.send("ready-to-show");
   }
 }

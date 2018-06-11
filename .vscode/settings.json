@@ -9,5 +9,8 @@
       "fileMatch": ["electron-builder.json"],
       "url": "/node_modules/electron-builder-lib/scheme.json"
     }
-  ]
+  ],
+  "files.associations": {
+    "electron-*.json": "jsonc"
+  }
 }
