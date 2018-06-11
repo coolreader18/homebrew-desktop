@@ -1,1 +1,12 @@
-{}
+{
+  "renderer": {
+    "dll": [
+      "react",
+      "unstated",
+      "axios",
+      "classnames",
+      "./node_modules/@material-ui/core",
+      "./node_modules/@material-ui/icons"
+    ]
+  }
+}
