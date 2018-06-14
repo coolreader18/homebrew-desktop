@@ -9,7 +9,12 @@ import AppsGrid from "./AppsGrid";
 import DirectoryPrompt from "./DirectoryPrompt";
 import styles, { AppStyles, StylesProvider, WidthProvider } from "./styles";
 import TopBar from "./TopBar";
-import { HashRouter, Route, Switch } from "react-router-dom";
+import {
+  HashRouter,
+  Route,
+  Switch,
+  RouteComponentProps
+} from "react-router-dom";
 import imagesLoaded from "imagesloaded";
 
 interface AppState {
@@ -39,14 +44,16 @@ export class App extends Component<AppProps, AppState> {
     return (
       <Switch>
         <Route path="/main">
-          <div style={{ paddingTop: 75 }}>
-            <TopBar classes={classes} />
-            <Switch>
-              <Route path="/main/apps">
-                <AppsGrid directory={data} {...{ classes, width }} />
-              </Route>
-            </Switch>
-          </div>
+          {({ history }: RouteComponentProps<any>) => (
+            <div style={{ paddingTop: 75 }}>
+              <TopBar {...{ classes, history }} />
+              <Switch>
+                <Route path="/main/apps">
+                  <AppsGrid directory={data} {...{ classes, width }} />
+                </Route>
+              </Switch>
+            </div>
+          )}
         </Route>
         <Route path="/">
           <DirectoryPrompt {...{ classes }} />

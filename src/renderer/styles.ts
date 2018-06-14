@@ -83,7 +83,8 @@ const styles = (theme: Theme) =>
       height: "100%",
       position: "relative",
       transform: "translateX(-50%)"
-    }
+    },
+    list: { width: 200 }
   });
 
 const nullAny: any = null;
