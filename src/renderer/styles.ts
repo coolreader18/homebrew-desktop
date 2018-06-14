@@ -16,13 +16,15 @@ const styles = (theme: Theme) =>
     rightIcon: {
       marginLeft: theme.spacing.unit
     },
-    modalBase: {
+    flexBase: {
       width: "100%",
       height: "100%",
       display: "flex",
       alignItems: "center",
-      pointerEvents: "none",
       justifyContent: "center"
+    },
+    modalBase: {
+      pointerEvents: "none"
     },
     modalCard: {
       pointerEvents: "auto",
@@ -75,17 +77,24 @@ const styles = (theme: Theme) =>
       userDrag: "none",
       userSelect: "none"
     },
-    pointer: { cursor: "default" }
+    pointer: { cursor: "default" },
+    gridListImg: {
+      left: "50%",
+      height: "100%",
+      position: "relative",
+      transform: "translateX(-50%)"
+    }
   });
 
+const nullAny: any = null;
 export type AppStyles = WithStyles<typeof styles>;
 export type AppClasses = AppStyles["classes"];
-const stylesContext = React.createContext<AppClasses>(<any>{});
+const stylesContext = React.createContext<AppClasses>(nullAny);
 export const {
   Consumer: StylesConsumer,
   Provider: StylesProvider
 } = stylesContext;
-const widthContext = React.createContext<Breakpoint>("md");
+const widthContext = React.createContext<Breakpoint>(nullAny);
 export const {
   Consumer: WidthConsumer,
   Provider: WidthProvider

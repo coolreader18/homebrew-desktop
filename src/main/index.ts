@@ -1,9 +1,8 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import * as path from "path";
-// import icon from "static/icons/png/64x64.png";
+import isDev from "common/isDev";
 
 app.setName("homebrew-desktop");
-const isDevelopment = process.env.NODE_ENV !== "production";
 
 let mainWindow: BrowserWindow | null;
 
@@ -19,22 +18,19 @@ function createWindow() {
     icon: path.join(__static, "icons/png/64x64.png"),
     title: "Homebrew Desktop"
   });
-  //mainWindow.setMenu(null)
+  // mainWindow.setMenu(null)
+  if (isDev) mainWindow.webContents.openDevTools();
   // and load the index.html of the app.
   mainWindow.loadURL(
-    isDevelopment
+    isDev
       ? `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`
       : `file://${path.join(__dirname, "index.html")}`
   );
 
-  if (isDevelopment)
-    BrowserWindow.addDevToolsExtension(
-      path.join(__static, "react-devtools.crx")
-    );
-  // Emitted when the window is closed.
-  ipcMain.on("ready-to-show", () => {
+  ipcMain.once("ready-to-show", () => {
     mainWindow!.show();
   });
+  // Emitted when the window is closed.
   mainWindow.once("closed", function() {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time

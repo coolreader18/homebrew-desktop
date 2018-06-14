@@ -5,8 +5,11 @@ import "./index.css";
 import App from "./App";
 import { getRepositories } from "common/api";
 import { getConfig } from "common/config";
+import isDev from "common/isDev";
 const baseConfig = getConfig();
 require("axios").defaults.adapter = require("axios/lib/adapters/http");
+
+if (isDev) require("electron-react-devtools").install();
 
 if (!baseConfig.repositories) {
   baseConfig.repositories = ["https://wiiubru.com/appstore"];

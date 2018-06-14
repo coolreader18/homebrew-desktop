@@ -13,7 +13,7 @@ export class EventContainer<State extends object> extends Container<State> {
     stateDidUpdateShouldTrigger: boolean = true
   ) {
     const prevState = this.state;
-    await Container.prototype.setState.call(this, state, callback);
+    await super.setState<K>(state, callback!);
     if (this.stateDidUpdate && stateDidUpdateShouldTrigger) {
       await this.stateDidUpdate(prevState);
     }
@@ -50,7 +50,7 @@ export class AppsInfoContainer extends Container<AppsInfo> {
   };
   constructor() {
     super();
-    this.loadFromDirectory();
+    if (configContainer.state.directory) this.loadFromDirectory();
   }
   reset(newVal: AppsInfo = {}) {
     return this.setState(() => (this.state = newVal));

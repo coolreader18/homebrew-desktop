@@ -3,18 +3,17 @@ import { WithWidthProps } from "@material-ui/core/withWidth";
 import cn from "classnames";
 import { ipcRenderer } from "electron";
 import React, { Component } from "react";
-import { Provider as UnstatedProvider, Subscribe } from "unstated";
+import "typeface-roboto/index.css";
+import { Provider as UnstatedProvider } from "unstated";
 import AppsGrid from "./AppsGrid";
 import DirectoryPrompt from "./DirectoryPrompt";
-import InfoModal from "./InfoModal";
-import { configContainer, ConfigContainer } from "./state";
 import styles, { AppStyles, StylesProvider, WidthProvider } from "./styles";
 import TopBar from "./TopBar";
+import { HashRouter, Route, Switch } from "react-router-dom";
+import imagesLoaded from "imagesloaded";
 
 interface AppState {
   data: HBASApp[];
-  modal: HBASApp;
-  modalOpen: boolean;
 }
 
 interface BaseAppProps {
@@ -25,54 +24,40 @@ type AppProps = BaseAppProps & AppStyles & WithWidthProps;
 
 export class App extends Component<AppProps, AppState> {
   state: AppState = {
-    data: this.props.initialRepos,
-    modal: this.props.initialRepos[0],
-    modalOpen: false
-  };
-  tileClick = (app: HBASApp) => {
-    this.setState({
-      modal: app,
-      modalOpen: true
-    });
-  };
-  modalClose = () => {
-    this.setState({ modalOpen: false });
+    data: this.props.initialRepos
   };
   render() {
     const {
-      state: { data, modal, modalOpen },
+      state: { data },
       props: { classes, width }
     } = this;
-    document.body.className = cn(classes.unclickable, classes.pointer);
+    {
+      const bodyClasses = cn(classes.unclickable, classes.pointer);
+      const { body } = document;
+      if (body.className !== bodyClasses) body.className = bodyClasses;
+    }
     return (
-      <Subscribe to={[configContainer]}>
-        {({ state }: ConfigContainer) =>
-          state && state.directory ? (
-            <div style={{ paddingTop: 75 }}>
-              <TopBar classes={classes} />
-              {data && (
-                <AppsGrid
-                  directory={data}
-                  onTileClick={this.tileClick}
-                  {...{ classes, width }}
-                />
-              )}
-              <InfoModal
-                info={modal}
-                classes={classes}
-                open={modalOpen}
-                onClose={this.modalClose}
-              />
-            </div>
-          ) : (
-            <DirectoryPrompt classes={classes} />
-          )
-        }
-      </Subscribe>
+      <Switch>
+        <Route path="/main">
+          <div style={{ paddingTop: 75 }}>
+            <TopBar classes={classes} />
+            <Switch>
+              <Route path="/main/apps">
+                <AppsGrid directory={data} {...{ classes, width }} />
+              </Route>
+            </Switch>
+          </div>
+        </Route>
+        <Route path="/">
+          <DirectoryPrompt {...{ classes }} />
+        </Route>
+      </Switch>
     );
   }
   componentDidMount() {
-    ipcRenderer.send("ready-to-show");
+    imagesLoaded(document.querySelector("#app")!, () => {
+      ipcRenderer.send("ready-to-show");
+    });
   }
 }
 
@@ -81,7 +66,9 @@ const appRender = (props: AppProps) => (
     <UnstatedProvider>
       <StylesProvider value={props.classes}>
         <WidthProvider value={props.width}>
-          <App {...props} />
+          <HashRouter>
+            <App {...props} />
+          </HashRouter>
         </WidthProvider>
       </StylesProvider>
     </UnstatedProvider>

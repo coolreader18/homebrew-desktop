@@ -8,5 +8,6 @@
   //     "./node_modules/@material-ui/core",
   //     "./node_modules/@material-ui/icons"
   //   ]
-  // }
+  // },
+  "title": "Homebrew Desktop"
 }

@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { AppClasses } from "./styles";
+import { AppStyles } from "./styles";
 import {
   AppBar,
   Drawer,
@@ -14,10 +14,7 @@ interface AppBarState {
   drawerOpen: boolean;
 }
 
-export default class TopBar extends PureComponent<
-  { classes: AppClasses },
-  AppBarState
-> {
+export default class TopBar extends PureComponent<AppStyles, AppBarState> {
   state: AppBarState = {
     drawerOpen: false
   };

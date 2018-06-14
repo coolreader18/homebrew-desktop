@@ -5,10 +5,12 @@ import {
   IconButton
 } from "@material-ui/core";
 import { Breakpoint } from "@material-ui/core/styles/createBreakpoints";
-import { WithWidthProps } from "@material-ui/core/withWidth";
 import * as icons from "@material-ui/icons";
 import React, { PureComponent } from "react";
-import { AppClasses } from "./styles";
+import { AppStyles } from "./styles";
+import { WithWidthProps } from "@material-ui/core/withWidth";
+import InfoModal from "./InfoModal";
+import cn from "classnames";
 
 export let colWidths: { [width in Breakpoint]: number } = {
   xs: 2,
@@ -18,43 +20,72 @@ export let colWidths: { [width in Breakpoint]: number } = {
   xl: 4
 };
 
-export default class AppsGrid extends PureComponent<
-  {
+type AppsGridProps = AppStyles &
+  WithWidthProps & {
     directory: HBASApp[];
-    classes: AppClasses;
-    onTileClick: (app: HBASApp) => void;
-  } & WithWidthProps
+  };
+
+interface AppsGridState {
+  modal: HBASApp;
+  modalOpen: boolean;
+}
+
+export default class AppsGrid extends PureComponent<
+  AppsGridProps,
+  AppsGridState
 > {
-  handleClick = (e: React.MouseEvent<HTMLElement>) => {
+  constructor(props: AppsGridProps) {
+    super(props);
+  }
+  state: AppsGridState = {
+    modal: this.props.directory[0],
+    modalOpen: false
+  };
+  openModal = (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation();
-    this.props.onTileClick(
-      this.props.directory[~~(e.currentTarget.dataset.index as string)]
-    );
+    const app = this.props.directory[
+      ~~(e.currentTarget.dataset.index as string)
+    ];
+    this.setState({ modal: app, modalOpen: true });
+  };
+  closeModal = () => {
+    this.setState({ modalOpen: false });
   };
   render() {
-    const { classes, width, directory } = this.props;
+    const {
+      props: { directory, classes, width },
+      state: { modal, modalOpen }
+    } = this;
     return (
-      <GridList cols={colWidths[width]} className={classes.gridList}>
-        {directory.map(({ directory, name, author, repository }, i) => (
-          <GridListTile key={directory} cols={1} rows={1}>
-            <img
-              src={`${repository}/apps/${directory}/icon.png`}
-              className={classes.clickable}
-              data-index={i}
-              onClick={this.handleClick}
-            />
-            <GridListTileBar
-              title={name}
-              subtitle={<span>by {author}</span>}
-              actionIcon={
-                <IconButton data-index={i} onClick={this.handleClick}>
-                  <icons.Info />
-                </IconButton>
-              }
-            />
-          </GridListTile>
-        ))}
-      </GridList>
+      <>
+        <GridList cols={colWidths[width]} className={classes.gridList}>
+          {directory.map(({ directory, name, author, repository }, i) => (
+            <GridListTile key={directory} cols={1} rows={1}>
+              <img
+                src={`${repository}/apps/${directory}/icon.png`}
+                className={cn(classes.clickable, classes.gridListImg)}
+                data-index={i}
+                onClick={this.openModal}
+              />
+              <GridListTileBar
+                title={name}
+                subtitle={<span>by {author}</span>}
+                actionIcon={
+                  <IconButton data-index={i} onClick={this.openModal}>
+                    <icons.Info />
+                  </IconButton>
+                }
+              />
+            </GridListTile>
+          ))}
+        </GridList>
+        <InfoModal
+          info={modal}
+          open={modalOpen}
+          onClose={this.closeModal}
+          {...{ classes }}
+        />
+      </>
     );
   }
 }

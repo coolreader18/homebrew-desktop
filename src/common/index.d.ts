@@ -39,4 +39,4 @@ declare module "*.png" {
   export default value;
 }
 
-declare const __static: string;
+declare var __static: string;

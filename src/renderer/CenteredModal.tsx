@@ -2,6 +2,7 @@ import React, { PureComponent } from "react";
 import { StylesConsumer } from "./styles";
 import { Modal } from "@material-ui/core";
 import { ModalProps } from "@material-ui/core/Modal";
+import cn from "classnames";
 
 export default class CenteredModal extends PureComponent<
   ModalProps & { children?: any }
@@ -12,7 +13,9 @@ export default class CenteredModal extends PureComponent<
       <StylesConsumer>
         {classes => (
           <Modal {...props}>
-            <div className={classes.modalBase}>{children}</div>
+            <div className={cn(classes.flexBase, classes.modalBase)}>
+              {children}
+            </div>
           </Modal>
         )}
       </StylesConsumer>
