@@ -4,8 +4,13 @@ import electron, { remote } from "electron";
 
 const app = electron.app || remote.app;
 
+export interface ReposConfig {
+  repo: string;
+  key: string;
+}
+
 export interface AppConfig {
-  repositories: string[];
+  repositories: ReposConfig[];
   directory: string;
 }
 const config = new Store<AppConfig>({

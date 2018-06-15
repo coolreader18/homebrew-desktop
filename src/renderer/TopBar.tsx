@@ -13,6 +13,11 @@ import {
 import * as icons from "@material-ui/icons";
 import { History } from "history";
 
+const pages = [
+  { label: "Apps", path: "apps", icon: icons.Apps },
+  { label: "Settings", path: "config", icon: icons.Settings }
+];
+
 interface AppBarState {
   drawerOpen: boolean;
 }
@@ -30,7 +35,10 @@ export default class TopBar extends PureComponent<
   routeSidebar = (e: React.MouseEvent<HTMLLIElement>) => {
     const path = `/main/${e.currentTarget.dataset.path}`;
     const { history } = this.props;
-    if (history.location.pathname !== path) history.push(path);
+    if (history.location.pathname !== path) {
+      history.push(path);
+      this.toggleDrawer();
+    }
   };
   render() {
     const {
@@ -39,31 +47,29 @@ export default class TopBar extends PureComponent<
       toggleDrawer
     } = this;
     return (
-      <AppBar className={classes.appBar}>
+      <AppBar color="primary" className={classes.appBar}>
         <Drawer open={drawerOpen} onClose={toggleDrawer}>
           <div className={classes.list}>
             <List>
-              {[{ label: "Apps", path: "apps", icon: icons.Apps }].map(
-                ({ label, path, icon: Icon }) => (
-                  <ListItem
-                    button
-                    onClick={this.routeSidebar}
-                    data-path={path}
-                    key={path}
-                  >
-                    <ListItemIcon>
-                      <Icon />
-                    </ListItemIcon>
-                    <ListItemText primary={label} />
-                  </ListItem>
-                )
-              )}
+              {pages.map(({ label, path, icon: Icon }) => (
+                <ListItem
+                  button
+                  onClick={this.routeSidebar}
+                  data-path={path}
+                  key={path}
+                >
+                  <ListItemIcon>
+                    <Icon />
+                  </ListItemIcon>
+                  <ListItemText primary={label} />
+                </ListItem>
+              ))}
             </List>
           </div>
         </Drawer>
         <Toolbar>
           <IconButton className={classes.menuIcon} onClick={toggleDrawer}>
-            <icons.Menu color="secondary" />
+            <icons.Menu color="action" />
           </IconButton>
         </Toolbar>
       </AppBar>

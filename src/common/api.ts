@@ -2,14 +2,17 @@ import axios from "axios";
 import * as path from "path";
 import Stream from "stream";
 import * as fs from "fs-extra-promise";
+import { ReposConfig } from "common/config";
 
-export const getRepositories = async (...repositories: string[]) =>
+export const getRepositories = async (...repositories: ReposConfig[]) =>
   (await Promise.all(
-    repositories.map(cur => axios.get<HBASDirectory>(`${cur}/directory.json`))
+    repositories.map(({ repo }) =>
+      axios.get<HBASDirectory>(`${repo}/directory.json`)
+    )
   )).reduce((arr, cur, i) => {
     const { apps } = cur.data;
     for (const app of apps) {
-      app.repository = repositories[i];
+      app.repository = repositories[i].repo;
       app.long_desc = app.long_desc.replace(/\\(?:n|t|v)/g, a =>
         JSON.parse(`"${a}"`)
       );

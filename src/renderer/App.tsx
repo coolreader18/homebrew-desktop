@@ -1,21 +1,28 @@
-import { CssBaseline, withStyles, withWidth } from "@material-ui/core";
+import {
+  CssBaseline,
+  MuiThemeProvider,
+  withStyles,
+  withWidth
+} from "@material-ui/core";
 import { WithWidthProps } from "@material-ui/core/withWidth";
 import cn from "classnames";
 import { ipcRenderer } from "electron";
+import imagesLoaded from "imagesloaded";
 import React, { Component } from "react";
-import "typeface-roboto/index.css";
-import { Provider as UnstatedProvider } from "unstated";
-import AppsGrid from "./AppsGrid";
-import DirectoryPrompt from "./DirectoryPrompt";
-import styles, { AppStyles, StylesProvider, WidthProvider } from "./styles";
-import TopBar from "./TopBar";
 import {
   HashRouter,
   Route,
-  Switch,
-  RouteComponentProps
+  RouteComponentProps,
+  Switch
 } from "react-router-dom";
-import imagesLoaded from "imagesloaded";
+import "typeface-roboto/index.css";
+import { Provider as UnstatedProvider } from "unstated";
+import AppsGrid from "./AppsGrid";
+import { ConfigPage } from "./ConfigPage";
+import DirectoryPrompt from "./DirectoryPrompt";
+import styles, { AppStyles, StylesProvider, WidthProvider } from "./styles";
+import theme from "./theme";
+import TopBar from "./TopBar";
 
 interface AppState {
   data: HBASApp[];
@@ -51,6 +58,9 @@ export class App extends Component<AppProps, AppState> {
                 <Route path="/main/apps">
                   <AppsGrid directory={data} {...{ classes, width }} />
                 </Route>
+                <Route path="/main/config">
+                  <ConfigPage {...{ classes }} />
+                </Route>
               </Switch>
             </div>
           )}
@@ -69,19 +79,19 @@ export class App extends Component<AppProps, AppState> {
 }
 
 const appRender = (props: AppProps) => (
-  <CssBaseline>
-    <UnstatedProvider>
-      <StylesProvider value={props.classes}>
-        <WidthProvider value={props.width}>
-          <HashRouter>
-            <App {...props} />
-          </HashRouter>
-        </WidthProvider>
-      </StylesProvider>
-    </UnstatedProvider>
-  </CssBaseline>
+  <MuiThemeProvider theme={theme}>
+    <CssBaseline>
+      <UnstatedProvider>
+        <StylesProvider value={props.classes}>
+          <WidthProvider value={props.width}>
+            <HashRouter>
+              <App {...props} />
+            </HashRouter>
+          </WidthProvider>
+        </StylesProvider>
+      </UnstatedProvider>
+    </CssBaseline>
+  </MuiThemeProvider>
 );
 
-export default withStyles(styles)<BaseAppProps>(
-  withWidth({ resizeInterval: 10 })(appRender)
-);
+export default withStyles(styles)(withWidth({ resizeInterval: 10 })(appRender));

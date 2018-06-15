@@ -6,11 +6,12 @@ import {
 } from "@material-ui/core";
 import { Breakpoint } from "@material-ui/core/styles/createBreakpoints";
 import * as icons from "@material-ui/icons";
-import React, { PureComponent } from "react";
+import React, { Component } from "react";
 import { AppStyles } from "./styles";
 import { WithWidthProps } from "@material-ui/core/withWidth";
 import InfoModal from "./InfoModal";
 import cn from "classnames";
+import deepEqual from "deep-equal";
 
 export let colWidths: { [width in Breakpoint]: number } = {
   xs: 2,
@@ -30,10 +31,7 @@ interface AppsGridState {
   modalOpen: boolean;
 }
 
-export default class AppsGrid extends PureComponent<
-  AppsGridProps,
-  AppsGridState
-> {
+export default class AppsGrid extends Component<AppsGridProps, AppsGridState> {
   constructor(props: AppsGridProps) {
     super(props);
   }
@@ -72,7 +70,7 @@ export default class AppsGrid extends PureComponent<
                 subtitle={<span>by {author}</span>}
                 actionIcon={
                   <IconButton data-index={i} onClick={this.openModal}>
-                    <icons.Info />
+                    <icons.Info color="secondary" />
                   </IconButton>
                 }
               />
@@ -87,5 +85,8 @@ export default class AppsGrid extends PureComponent<
         />
       </>
     );
+  }
+  shouldComponentUpdate(newProps: AppsGridProps) {
+    return !deepEqual(newProps.directory, this.props.directory);
   }
 }

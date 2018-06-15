@@ -4,17 +4,22 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import { getRepositories } from "common/api";
-import { getConfig } from "common/config";
 import isDev from "common/isDev";
-const baseConfig = getConfig();
+import { configContainer } from "./state";
 require("axios").defaults.adapter = require("axios/lib/adapters/http");
 
 if (isDev) require("electron-react-devtools").install();
 
-if (!baseConfig.repositories) {
-  baseConfig.repositories = ["https://wiiubru.com/appstore"];
-}
-getRepositories(...baseConfig.repositories).then(initialRepos => {
+(async () => {
+  const baseConfig = configContainer.state;
+  if (!baseConfig.repositories) {
+    await configContainer.setState({
+      repositories: [
+        { repo: "https://wiiubru.com/appstore", key: Math.random().toString() }
+      ]
+    });
+  }
+  const initialRepos = await getRepositories(...baseConfig.repositories);
   const render = () => {
     ReactDOM.render(
       // Wrap App inside AppContainer
@@ -25,11 +30,11 @@ getRepositories(...baseConfig.repositories).then(initialRepos => {
     );
   };
 
-  // // Render once
+  // Render once
   render();
 
   // Webpack Hot Module Replacement API
   if (module.hot) {
     module.hot.accept("./App", render);
   }
-});
+})();

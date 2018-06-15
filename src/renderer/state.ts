@@ -30,6 +30,31 @@ export class ConfigContainer extends EventContainer<AppConfig> {
       appsInfoContainer.loadFromDirectory();
     }
   }
+
+  addRepo = () => {
+    this.setState(({ repositories }) => ({
+      repositories: repositories.concat({
+        repo: "",
+        key: Math.random().toString()
+      })
+    }));
+  };
+  changeRepo = (index: number, value: string) => {
+    this.setState(({ repositories }) => {
+      const oldRepos = repositories.slice();
+      oldRepos[index].repo = value;
+      return { repositories: oldRepos };
+    });
+  };
+  removeRepo = (index: number) => {
+    this.setState(({ repositories }) => {
+      const oldRepos = repositories.slice();
+      oldRepos.splice(index, 1);
+      return {
+        repositories: oldRepos
+      };
+    });
+  };
 }
 
 export const configContainer = new ConfigContainer();

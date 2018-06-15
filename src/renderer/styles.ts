@@ -84,7 +84,8 @@ const styles = (theme: Theme) =>
       position: "relative",
       transform: "translateX(-50%)"
     },
-    list: { width: 200 }
+    list: { width: 200 },
+    reposList: { maxHeight: 500, overflow: "auto", maxWidth: 300 }
   });
 
 const nullAny: any = null;
