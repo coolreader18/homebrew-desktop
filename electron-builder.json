@@ -3,13 +3,15 @@
     "buildResources": "build",
     "app": "."
   },
+  "publish": "github",
   "linux": {
     "category": "Utility",
     "target": ["deb"],
     "desktop": { "name": "Homebrew Desktop" }
   },
   "win": {
-    "target": "squirrel"
+    "icon": "build/icon.ico",
+    "target": ["nsis"]
   },
   "extends": "electron-webpack/electron-builder.yml"
 }

@@ -1,12 +1,13 @@
 import { app, BrowserWindow, ipcMain } from "electron";
+import { autoUpdater } from "electron-updater";
 import * as path from "path";
 import isDev from "common/isDev";
 
 app.setName("homebrew-desktop");
 
-let mainWindow: BrowserWindow | null;
+let mainWindow: BrowserWindow | null = null;
 
-function createWindow() {
+const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1000,
@@ -37,12 +38,15 @@ function createWindow() {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
-}
+};
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", createWindow);
+app.on("ready", () => {
+  createWindow();
+  if (!isDev) autoUpdater.checkForUpdatesAndNotify();
+});
 
 // Quit when all windows are closed.
 app.on("window-all-closed", () => {

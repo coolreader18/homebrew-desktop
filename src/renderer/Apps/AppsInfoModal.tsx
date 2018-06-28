@@ -11,16 +11,16 @@ import { ModalProps } from "@material-ui/core/Modal";
 import * as icons from "@material-ui/icons";
 import cn from "classnames";
 import React, { PureComponent } from "react";
-import CenteredModal from "./CenteredModal";
+import CenteredModal from "../CenteredModal";
 import {
   appsInfoContainer,
   AppsInfoContainer,
   AppInfo,
   configContainer
-} from "./state";
-import { AppStyles } from "./styles";
+} from "../state";
 import { Subscribe } from "unstated";
 import { downloadApp, removeApp } from "common/api";
+import { AppsStyles } from "./appsStyles";
 
 const defaultAppInfo: AppInfo = {
   loading: false,
@@ -29,7 +29,7 @@ const defaultAppInfo: AppInfo = {
 
 export default class InfoModal extends PureComponent<
   ModalProps &
-    AppStyles & {
+    AppsStyles & {
       info: HBASApp;
     }
 > {
@@ -59,14 +59,12 @@ export default class InfoModal extends PureComponent<
             className={classes.modalCardImage}
           />
           <CardContent>
-            <Typography variant="title" className={classes.pointer}>
-              {name}
-            </Typography>
+            <Typography variant="title">{name}</Typography>
             <Typography variant="subheading">by {author}</Typography>
             <Typography
               variant="body1"
               component="p"
-              className={cn(classes.paragraph, classes.pointer)}
+              className={classes.paragraph}
             >
               {long_desc}
             </Typography>

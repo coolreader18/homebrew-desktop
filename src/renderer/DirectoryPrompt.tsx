@@ -1,13 +1,13 @@
-import { Button } from "@material-ui/core";
+import { Button, withStyles } from "@material-ui/core";
 
 import { remote } from "electron";
 import React, { PureComponent } from "react";
 import { configContainer, ConfigContainer } from "./state";
-import { AppStyles } from "./styles";
 import { Subscribe } from "unstated";
 import { Redirect } from "react-router";
+import baseStyles, { BaseStyles } from "./baseStyles";
 
-export default class DirectoryPrompt extends PureComponent<AppStyles> {
+class DirectoryPrompt extends PureComponent<BaseStyles> {
   clickHandler = async () => {
     const paths = await new Promise<string[] | void>(res =>
       remote.dialog.showOpenDialog(
@@ -35,3 +35,5 @@ export default class DirectoryPrompt extends PureComponent<AppStyles> {
     );
   }
 }
+
+export default withStyles(baseStyles)(DirectoryPrompt);

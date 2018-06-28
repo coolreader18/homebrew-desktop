@@ -4,29 +4,30 @@ import {
   TextField,
   ListSubheader,
   ListItemSecondaryAction,
-  IconButton
+  IconButton,
+  withStyles
 } from "@material-ui/core";
 import React, { PureComponent } from "react";
-import { AppStyles } from "./styles";
 import * as icons from "@material-ui/icons";
 import { Subscribe } from "unstated";
-import { configContainer, ConfigContainer } from "./state";
+import { configContainer, ConfigContainer } from "../state";
+import configStyles, { ConfigStyles } from "./configStyles";
 
-export class ConfigPage extends PureComponent<AppStyles> {
-  private getIndex(elem: HTMLElement) {
-    return ~~elem.dataset.index!;
+class Config extends PureComponent<ConfigStyles> {
+  removeRepo(ind: number) {
+    return (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+      configContainer.removeRepo(ind);
+    };
   }
-  removeRepo = (e: React.MouseEvent<HTMLInputElement>) => {
-    const ind = this.getIndex(e.currentTarget);
+  changeRepo(ind: number) {
+    return (e: React.ChangeEvent<HTMLInputElement>) => {
+      e.stopPropagation();
+      const val = e.currentTarget.value;
 
-    configContainer.removeRepo(ind);
-  };
-  changeRepo = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const ind = this.getIndex(e.currentTarget.parentElement!.parentElement!);
-    const val = e.target.value;
-
-    configContainer.changeRepo(ind, val);
-  };
+      configContainer.changeRepo(ind, val);
+    };
+  }
   private validateUrl(url: string): boolean {
     try {
       new URL(url);
@@ -35,7 +36,6 @@ export class ConfigPage extends PureComponent<AppStyles> {
       return false;
     }
   }
-
   render() {
     const { classes } = this.props;
     return (
@@ -61,11 +61,10 @@ export class ConfigPage extends PureComponent<AppStyles> {
                       error={!this.validateUrl(repo)}
                       type="url"
                       defaultValue={repo}
-                      onChange={this.changeRepo}
-                      data-index={i}
+                      onChange={this.changeRepo(i)}
                     />
                     <ListItemSecondaryAction>
-                      <IconButton onClick={this.removeRepo} data-index={i}>
+                      <IconButton onClick={this.removeRepo(i)}>
                         <icons.RemoveCircle />
                       </IconButton>
                     </ListItemSecondaryAction>
@@ -79,3 +78,5 @@ export class ConfigPage extends PureComponent<AppStyles> {
     );
   }
 }
+
+export default withStyles(configStyles)(Config);

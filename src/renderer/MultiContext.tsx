@@ -12,23 +12,32 @@ export const MultiProvider = ({
     children
   );
 
-export const MultiConsumer = ({
-  consumers,
-  children
-}: {
-  consumers: React.Consumer<any>[];
-  children: (...args: any[]) => React.ReactNode;
-}) => {
-  const ret = Array(consumers.length);
-  consumers.reduce(
-    (prev, Cur, i) => {
-      <Cur>
-        {cur => {
-          ret[i] = cur;
-          return prev;
-        }}
-      </Cur>;
-    },
-    (() => children(ret)) as any
-  );
-};
+export class MultiConsumer<
+  A extends { [k: string]: React.Consumer<any> },
+  B extends {
+    [k in keyof A]: A[k] extends (React.Consumer<infer G>) ? G : never
+  }
+> extends React.Component<{
+  consumers: A;
+  children: (obj: B) => React.ReactNode;
+}> {
+  render() {
+    const { consumers, children } = this.props;
+    const ret: { [k: string]: any } = {};
+    Object.entries(consumers).reduce(
+      (prev, [name, Cur]) => {
+        <Cur>
+          {cur => {
+            ret[name] = cur;
+            return prev;
+          }}
+        </Cur>;
+      },
+      (() => children(ret as B)) as any
+    );
+    return null;
+  }
+  shouldComponentUpdate() {
+    return false;
+  }
+}

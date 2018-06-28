@@ -1,5 +1,4 @@
 import React, { PureComponent } from "react";
-import { AppStyles } from "./styles";
 import {
   AppBar,
   Drawer,
@@ -8,10 +7,12 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemIcon
+  ListItemIcon,
+  withStyles
 } from "@material-ui/core";
 import * as icons from "@material-ui/icons";
 import { History } from "history";
+import topBarStyles, { TopBarStyles } from "./topBarStyles";
 
 const pages = [
   { label: "Apps", path: "apps", icon: icons.Apps },
@@ -22,8 +23,8 @@ interface AppBarState {
   drawerOpen: boolean;
 }
 
-export default class TopBar extends PureComponent<
-  AppStyles & { history: History },
+class TopBar extends PureComponent<
+  TopBarStyles & { history: History },
   AppBarState
 > {
   state: AppBarState = {
@@ -76,3 +77,5 @@ export default class TopBar extends PureComponent<
     );
   }
 }
+
+export default withStyles(topBarStyles)(TopBar);

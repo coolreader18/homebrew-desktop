@@ -1,13 +1,14 @@
 {
   "name": "homebrew-desktop",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Wii U Homebrew, for desktop",
   "main": "main.js",
   "scripts": {
     "start": "electron-webpack dev",
     "compile": "electron-webpack",
     "compile:dll": "electron-webpack dll",
-    "dist": "ELECTRON_HMR_SOCKET_PATH=1 yarn compile && electron-builder",
+    "release": "yarn release",
+    "dist": "ELECTRON_HMR_SOCKET_PATH=1 yarn compile && electron-builder -wl",
     "dist:dir": "yarn dist -- --dir -c.compression=store -c.mac.identity=null"
   },
   "repository": "https://github.com/coolreader18/homebrew-desktop",
@@ -50,6 +51,7 @@
     "color": "^3.0.0",
     "deep-equal": "^1.0.1",
     "electron-store": "^2.0.0",
+    "electron-updater": "^2.22.1",
     "fs-extra-promise": "^1.0.1",
     "imagesloaded": "^4.1.4",
     "react": "^16.4.0",
