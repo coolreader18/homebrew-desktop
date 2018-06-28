@@ -19,34 +19,37 @@ export const colWidths: { [width in Breakpoint]: number } = {
   xl: 4
 };
 
-export default pureFunction("AppsGrid")<
+export default pureFunction<
   WithWidthProps &
     AppsStyles & {
       directory: HBASApp[];
       onClick: (index: number) => React.MouseEventHandler;
     }
->(({ directory, width, classes, onClick: click }) => (
-  <GridList cols={colWidths[width]} className={classes.gridList}>
-    {directory.map(({ directory, repository, author }, i) => {
-      const onClick = click(i);
-      return (
-        <GridListTile key={directory} cols={1} rows={1}>
-          <img
-            src={`${repository}/apps/${directory}/icon.png`}
-            className={classes.gridListImg}
-            onClick={onClick}
-          />
-          <GridListTileBar
-            title={name}
-            subtitle={<span>by {author}</span>}
-            actionIcon={
-              <IconButton onClick={onClick}>
-                <icons.Info color="secondary" />
-              </IconButton>
-            }
-          />
-        </GridListTile>
-      );
-    })}
-  </GridList>
-));
+>(
+  ({ directory, width, classes, onClick: click }) => (
+    <GridList cols={colWidths[width]} className={classes.gridList}>
+      {directory.map(({ directory, repository, author, name }, i) => {
+        const onClick = click(i);
+        return (
+          <GridListTile key={directory} cols={1} rows={1}>
+            <img
+              src={`${repository}/apps/${directory}/icon.png`}
+              className={classes.gridListImg}
+              onClick={onClick}
+            />
+            <GridListTileBar
+              title={name}
+              subtitle={<span>by {author}</span>}
+              actionIcon={
+                <IconButton onClick={onClick}>
+                  <icons.Info color="secondary" />
+                </IconButton>
+              }
+            />
+          </GridListTile>
+        );
+      })}
+    </GridList>
+  ),
+  "AppsGrid"
+);
