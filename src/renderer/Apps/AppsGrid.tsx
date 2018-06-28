@@ -1,8 +1,14 @@
-import { GridList } from "@material-ui/core";
+import {
+  GridList,
+  GridListTile,
+  GridListTileBar,
+  IconButton
+} from "@material-ui/core";
 import { Breakpoint } from "@material-ui/core/styles/createBreakpoints";
 import { WithWidthProps } from "@material-ui/core/withWidth";
-import React, { PureComponent } from "react";
-import AppTile from "./AppsGridTile";
+import * as icons from "@material-ui/icons";
+import pureFunction from "common/pure-functional-component";
+import React from "react";
 import { AppsStyles } from "./appsStyles";
 
 export const colWidths: { [width in Breakpoint]: number } = {
@@ -13,25 +19,34 @@ export const colWidths: { [width in Breakpoint]: number } = {
   xl: 4
 };
 
-export default class AppsGrid extends PureComponent<
+export default pureFunction("AppsGrid")<
   WithWidthProps &
     AppsStyles & {
       directory: HBASApp[];
       onClick: (index: number) => React.MouseEventHandler;
     }
-> {
-  render() {
-    const { directory, width, classes, onClick } = this.props;
-    return (
-      <GridList cols={colWidths[width]} className={classes.gridList}>
-        {directory.map((app, i) =>
-          AppTile({
-            onClick: onClick(i),
-            ...app,
-            classes
-          })
-        )}
-      </GridList>
-    );
-  }
-}
+>(({ directory, width, classes, onClick: click }) => (
+  <GridList cols={colWidths[width]} className={classes.gridList}>
+    {directory.map(({ directory, repository, author }, i) => {
+      const onClick = click(i);
+      return (
+        <GridListTile key={directory} cols={1} rows={1}>
+          <img
+            src={`${repository}/apps/${directory}/icon.png`}
+            className={classes.gridListImg}
+            onClick={onClick}
+          />
+          <GridListTileBar
+            title={name}
+            subtitle={<span>by {author}</span>}
+            actionIcon={
+              <IconButton onClick={onClick}>
+                <icons.Info color="secondary" />
+              </IconButton>
+            }
+          />
+        </GridListTile>
+      );
+    })}
+  </GridList>
+));

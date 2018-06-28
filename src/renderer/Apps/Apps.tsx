@@ -27,7 +27,7 @@ class Apps extends Component<AppsProps, AppsState> {
   openModal = (index: number) => (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation();
     const app = this.props.directory[index];
-    this.setState({ modal: app, modalOpen: true }, () => console.log("a"));
+    this.setState({ modal: app, modalOpen: true });
   };
   closeModal = () => {
     this.setState({ modalOpen: false });

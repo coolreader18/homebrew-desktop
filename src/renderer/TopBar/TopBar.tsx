@@ -19,15 +19,15 @@ const pages = [
   { label: "Settings", path: "config", icon: icons.Settings }
 ];
 
-interface AppBarState {
+interface TopBarState {
   drawerOpen: boolean;
 }
 
 class TopBar extends PureComponent<
   TopBarStyles & { history: History },
-  AppBarState
+  TopBarState
 > {
-  state: AppBarState = {
+  state: TopBarState = {
     drawerOpen: false
   };
   toggleDrawer = () => {

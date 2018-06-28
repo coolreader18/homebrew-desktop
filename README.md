@@ -12,7 +12,7 @@ An app that allows you to manage your Homebrewed Wii U's SD card from a computer
 
 ![The app is downloaded, showing a remove button and a redownload button](screenshots/downloaded.png)
 
-## Building
+## Developing
 
 1.  Ensure that you have [node.js](https://nodejs.org/en/download/), and preferably
     [git](https://git-scm.com/downloads) and [yarn](https://yarnpkg.com/en/docs/install) installed.
@@ -22,6 +22,15 @@ An app that allows you to manage your Homebrewed Wii U's SD card from a computer
 3.  Install dependencies. If you did install yarn, run `yarn`, or `npm install` if you didn't, from
     the command line in the homebrew-desktop directory. Wait a while.
 4.  Run `yarn start` or `npm start`. The app should start up.
+
+## Building
+
+1.  Ensure that you have docker
+2.  Run
+
+```sh
+sudo docker run --rm -ti --env ELECTRON_CACHE="/root/.cache/electron" --env ELECTRON_BUILDER_CACHE="/root/.cache/electron-builder" -v "${PWD}:/project" -v "${PWD##*/}-node-modules:/project/node_modules" -v ~/.cache/electron:/root/.cache/electron -v ~/.cache/electron-builder:/root/.cache/electron-builder electronuserland/builder:wine-mono /bin/sh -c "yarn && yarn dist"
+```
 
 ## License
 

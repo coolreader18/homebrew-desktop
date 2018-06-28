@@ -1,5 +1,4 @@
 import { Button, withStyles } from "@material-ui/core";
-
 import { remote } from "electron";
 import React, { PureComponent } from "react";
 import { configContainer, ConfigContainer } from "./state";

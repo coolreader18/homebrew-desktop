@@ -7,7 +7,6 @@
     "start": "electron-webpack dev",
     "compile": "electron-webpack",
     "compile:dll": "electron-webpack dll",
-    "release": "yarn release",
     "dist": "ELECTRON_HMR_SOCKET_PATH=1 yarn compile && electron-builder -wl",
     "dist:dir": "yarn dist -- --dir -c.compression=store -c.mac.identity=null"
   },
