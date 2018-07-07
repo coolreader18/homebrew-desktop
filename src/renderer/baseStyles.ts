@@ -1,5 +1,9 @@
 import { Theme, createStyles, WithStyles } from "@material-ui/core";
 
+/**
+ * The base styles for the app, kinda like atomic CSS classes,
+ * injected into all the other styles for the different sections.
+ */
 const baseStyles = (theme: Theme) =>
   createStyles({
     wrapper: {

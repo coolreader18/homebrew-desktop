@@ -1,5 +1,4 @@
 import Store from "electron-store";
-import { join } from "path";
 import electron, { remote } from "electron";
 
 const app = electron.app || remote.app;
@@ -10,12 +9,16 @@ export interface ReposConfig {
 }
 
 export interface AppConfig {
+  /**
+   * The list of repositories that the app will fetch.
+   */
   repositories: ReposConfig[];
+  /**
+   * The base SD card directory or other directory to store apps in.
+   */
   directory: string;
 }
-const config = new Store<AppConfig>({
-  cwd: join(app.getPath("appData"), app.getName())
-});
+const config = new Store<AppConfig>();
 export const setConfig = (newConfig: Partial<AppConfig>) => {
   config.store = { ...config.store, ...newConfig };
 };

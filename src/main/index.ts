@@ -4,6 +4,7 @@ import * as path from "path";
 import isDev from "common/isDev";
 
 app.setName("homebrew-desktop");
+app.setPath("userData", path.join(app.getPath("appData"), app.getName()));
 
 let mainWindow: BrowserWindow | null = null;
 

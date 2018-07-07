@@ -22,12 +22,13 @@ interface AppState {
   data: HBASApp[];
 }
 
-interface BaseAppProps {
+type AppProps = WithWidthProps & {
   initialRepos: HBASApp[];
-}
+};
 
-type AppProps = BaseAppProps & WithWidthProps;
-
+/**
+ * The root component of the app
+ */
 export class App extends Component<AppProps, AppState> {
   state: AppState = {
     data: this.props.initialRepos
@@ -67,6 +68,9 @@ export class App extends Component<AppProps, AppState> {
   }
 }
 
+/**
+ * The App component wrapped in a bunch of providers.
+ */
 const appRender = (props: AppProps) => (
   <MuiThemeProvider theme={theme}>
     <CssBaseline>

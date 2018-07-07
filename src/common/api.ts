@@ -4,12 +4,18 @@ import Stream from "stream";
 import * as fs from "fs-extra-promise";
 import { ReposConfig } from "common/config";
 
-export const getRepositories = async (...repositories: ReposConfig[]) =>
-  (await Promise.all(
+/**
+ * Get the repositories at the specified urls, and normalize them
+ * @param repositories - URLs of the repositories to fetch
+ * @returns The normalized and parsed repositories
+ */
+export const getRepositories = async (...repositories: ReposConfig[]) => {
+  const repos = await Promise.all(
     repositories.map(({ repo }) =>
       axios.get<HBASDirectory>(`${repo}/directory.json`)
     )
-  )).reduce((arr, cur, i) => {
+  );
+  return repos.reduce((arr, cur, i) => {
     const { apps } = cur.data;
     for (const app of apps) {
       app.repository = repositories[i].repo;
@@ -19,7 +25,14 @@ export const getRepositories = async (...repositories: ReposConfig[]) =>
     }
     return arr.concat(apps);
   }, Array<HBASApp>());
+};
 
+/**
+ * Download an app to an SD card or other directory.
+ * @param baseDirectory - The base directory for the SD card or wherever else the
+ * app is to be downloaded.
+ * @param app - The HBASApp to be downloaded.
+ */
 export const downloadApp = async (
   baseDirectory: string,
   { directory, binary, repository }: HBASApp
@@ -38,6 +51,12 @@ export const downloadApp = async (
   );
 };
 
+/**
+ * Delete an app from from an SD card or other directory.
+ * @param baseDirectory - The base directory for the SD card or wherever else the
+ * app is to be removed from.
+ * @param app - The HBASApp to be removed.
+ */
 export const removeApp = async (
   baseDirectory: string,
   { directory }: HBASApp

@@ -31,6 +31,9 @@ export class ConfigContainer extends EventContainer<AppConfig> {
     }
   }
 
+  /**
+   * Add a blank repository to the repositories list
+   */
   addRepo = () => {
     this.setState(({ repositories }) => ({
       repositories: repositories.concat({
