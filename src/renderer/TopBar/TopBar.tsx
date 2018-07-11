@@ -23,10 +23,11 @@ interface TopBarState {
   drawerOpen: boolean;
 }
 
-class TopBar extends PureComponent<
-  TopBarStyles & { history: History },
-  TopBarState
-> {
+interface TopBarProps extends TopBarStyles {
+  history: History;
+}
+
+class TopBar extends PureComponent<TopBarProps, TopBarState> {
   state: TopBarState = {
     drawerOpen: false
   };

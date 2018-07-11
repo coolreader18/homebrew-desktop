@@ -6,10 +6,9 @@ import AppsGrid from "./AppsGrid";
 import AppsInfoModal from "./AppsInfoModal";
 import appsStyles, { AppsStyles } from "./appsStyles";
 
-type AppsProps = AppsStyles &
-  WithWidthProps & {
-    directory: HBASApp[];
-  };
+interface AppsProps extends AppsStyles, WithWidthProps {
+  directory: HBASApp[];
+}
 
 interface AppsState {
   modal: HBASApp;

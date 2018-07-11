@@ -1,13 +1,13 @@
 import axios from "axios";
 import * as path from "path";
-import Stream from "stream";
 import * as fs from "fs-extra-promise";
-import { ReposConfig } from "common/config";
+import { ReposConfig, HomebrewDirectory } from "common/config";
+import PromiseFtp from "promise-ftp";
 
 /**
  * Get the repositories at the specified urls, and normalize them
  * @param repositories - URLs of the repositories to fetch
- * @returns The normalized and parsed repositories
+ * @returns the normalized and parsed repositories
  */
 export const getRepositories = async (...repositories: ReposConfig[]) => {
   const repos = await Promise.all(
@@ -34,21 +34,55 @@ export const getRepositories = async (...repositories: ReposConfig[]) => {
  * @param app - The HBASApp to be downloaded.
  */
 export const downloadApp = async (
-  baseDirectory: string,
+  baseDirectory: HomebrewDirectory,
   { directory, binary, repository }: HBASApp
 ) => {
-  const appDirectory = path.join(baseDirectory, "wiiu/apps", directory);
-  await fs.mkdirpAsync(appDirectory);
-  await Promise.all(
-    ["meta.xml", "icon.png", binary].map(async cur => {
-      const { data } = await axios.get<Stream>(
-        `${repository}/apps/${directory}/${cur}`,
-        { responseType: "stream" }
+  const pipeFiles = async (
+    stream: (file: string, stream: NodeJS.ReadableStream) => Promise<any> | void
+  ) =>
+    await Promise.all(
+      ["meta.xml", "icon.png", binary].map(async cur => {
+        const { data } = await axios.get<NodeJS.ReadableStream>(
+          `${repository}/apps/${directory}/${cur}`,
+          { responseType: "stream" }
+        );
+        const done = new Promise(res => data.once("end", res));
+        const str = stream(cur, data);
+        if (str) await str;
+        else await done;
+      })
+    );
+
+  switch (baseDirectory.type) {
+    case "dir":
+      const appDirectory = path.join(
+        baseDirectory.path,
+        "wiiu/apps",
+        directory
       );
-      data.pipe(fs.createWriteStream(path.join(appDirectory, cur)));
-      await new Promise(res => data.once("end", res));
-    })
-  );
+      await fs.mkdirpAsync(appDirectory);
+      await pipeFiles((file, data) => {
+        data.pipe(fs.createWriteStream(path.join(appDirectory, file)));
+      });
+      break;
+
+    case "ftp":
+      const ftp = new PromiseFtp();
+      try {
+        await ftp.connect(baseDirectory);
+        const dir = path.join("/sd/wiiu/apps", directory);
+        await ftp.mkdir(dir);
+        await pipeFiles(async (file, data) => {
+          try {
+            await ftp.put(data, path.join(dir, file));
+          } catch (e) {
+            if (e.message !== "Success") throw e;
+          }
+        });
+        await ftp.end();
+      } catch {}
+      break;
+  }
 };
 
 /**
@@ -58,8 +92,39 @@ export const downloadApp = async (
  * @param app - The HBASApp to be removed.
  */
 export const removeApp = async (
-  baseDirectory: string,
+  baseDirectory: HomebrewDirectory,
   { directory }: HBASApp
 ) => {
-  await fs.removeAsync(`${baseDirectory}/wiiu/apps/${directory}`);
+  switch (baseDirectory.type) {
+    case "dir":
+      await fs.removeAsync(
+        path.join(baseDirectory.path, "wiiu/apps", directory)
+      );
+      break;
+
+    case "ftp":
+      const ftp = new PromiseFtp();
+      await ftp.connect(baseDirectory);
+      await ftp.rmdir(path.join("/sd/wiiu/apps", directory), true);
+      await ftp.end();
+      break;
+  }
+};
+
+export const listApps = async (directory: HomebrewDirectory) => {
+  let dirs: string[];
+  switch (directory.type) {
+    case "dir":
+      dirs = await fs.readdirAsync(path.join(directory.path, "wiiu/apps"));
+      break;
+
+    case "ftp":
+      const ftp = new PromiseFtp();
+      await ftp.connect(directory);
+      const list = await ftp.list("/sd/wiiu/apps");
+      dirs = list.filter(f => f.type === "d").map(f => f.name);
+      await ftp.end();
+      break;
+  }
+  return dirs!;
 };

@@ -13,7 +13,7 @@ import "typeface-roboto/index.css";
 import { Provider as UnstatedProvider } from "unstated";
 import Apps from "./Apps/Apps";
 import Config from "./Config/Config";
-import DirectoryPrompt from "./DirectoryPrompt";
+import DirectoryPrompt from "./DirectoryPrompt/DirectoryPrompt";
 import { WidthProvider } from "./width";
 import theme from "./theme";
 import TopBar from "./TopBar/TopBar";
@@ -22,9 +22,9 @@ interface AppState {
   data: HBASApp[];
 }
 
-type AppProps = WithWidthProps & {
+interface AppProps extends WithWidthProps {
   initialRepos: HBASApp[];
-};
+}
 
 /**
  * The root component of the app

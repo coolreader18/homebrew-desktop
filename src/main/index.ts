@@ -16,7 +16,7 @@ const createWindow = () => {
     minWidth: 400,
     minHeight: 600,
     backgroundColor: "#fafafa",
-    show: false,
+    // show: false,
     icon: path.join(__static, "icons/png/64x64.png"),
     title: "Homebrew Desktop"
   });

@@ -19,13 +19,12 @@ export const colWidths: { [width in Breakpoint]: number } = {
   xl: 4
 };
 
-export default pureFunction<
-  WithWidthProps &
-    AppsStyles & {
-      directory: HBASApp[];
-      onClick: (index: number) => React.MouseEventHandler;
-    }
->(
+interface AppsGridProps extends WithWidthProps, AppsStyles {
+  directory: HBASApp[];
+  onClick: (index: number) => React.MouseEventHandler;
+}
+
+export default pureFunction<AppsGridProps>(
   ({ directory, width, classes, onClick: click }) => (
     <GridList cols={colWidths[width]} className={classes.gridList}>
       {directory.map(({ directory, repository, author, name }, i) => {

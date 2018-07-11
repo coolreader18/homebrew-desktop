@@ -1,7 +1,6 @@
 import { Container } from "unstated";
 import { AppConfig, setConfig, getConfig } from "common/config";
-import * as fs from "fs-extra-promise";
-import * as path from "path";
+import { listApps } from "common/api";
 
 export class EventContainer<State extends object> extends Container<State> {
   stateDidUpdate?(prevState: State): PromiseLike<void> | void;
@@ -84,9 +83,7 @@ export class AppsInfoContainer extends Container<AppsInfo> {
     return this.setState(() => (this.state = newVal));
   }
   async loadFromDirectory() {
-    const dirs = await fs.readdirAsync(
-      path.join(configContainer.state.directory, "wiiu/apps")
-    );
+    const dirs = await listApps(configContainer.state.directory);
     appsInfoContainer.reset(
       dirs.reduce((obj: AppsInfo, cur) => {
         obj[cur] = { loading: false, installed: true };

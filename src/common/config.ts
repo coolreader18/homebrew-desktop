@@ -1,12 +1,13 @@
 import Store from "electron-store";
-import electron, { remote } from "electron";
-
-const app = electron.app || remote.app;
 
 export interface ReposConfig {
   repo: string;
   key: string;
 }
+
+export type HomebrewDirectory =
+  | { type: "dir"; path: string }
+  | { type: "ftp"; host: string; port?: number };
 
 export interface AppConfig {
   /**
@@ -16,8 +17,9 @@ export interface AppConfig {
   /**
    * The base SD card directory or other directory to store apps in.
    */
-  directory: string;
+  directory: HomebrewDirectory;
 }
+
 const config = new Store<AppConfig>();
 export const setConfig = (newConfig: Partial<AppConfig>) => {
   config.store = { ...config.store, ...newConfig };
